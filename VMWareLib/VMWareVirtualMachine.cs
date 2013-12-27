@@ -321,6 +321,14 @@ namespace Vestris.VMWareLib
 
 
 
+        #region - CopyFileFromHostToGuest -
+
+        private VMWareJob CopyFileFromHostToGuestJob(string hostPathName, string guestPathName)
+        {
+            var callback = new VMWareJobCallback();
+            return new VMWareJob(Handle.CopyFileFromHostToGuest(hostPathName, guestPathName, 0, null, callback), callback);
+        }
+
         /// <summary>
         /// Copies a file or directory from the local system (where the Vix client is running) to the guest operating system.
         /// </summary>
@@ -336,10 +344,30 @@ namespace Vestris.VMWareLib
         /// </summary>
         public void CopyFileFromHostToGuest(string hostPathName, string guestPathName, int timeoutInSeconds)
         {
-            var callback = new VMWareJobCallback();
-            var job = new VMWareJob(Handle.CopyFileFromHostToGuest(hostPathName, guestPathName, 0, null, callback), callback);
-            job.Wait(timeoutInSeconds);
+            CopyFileFromHostToGuestJob(hostPathName, guestPathName).Wait(timeoutInSeconds);
         }
+
+
+        /// <summary>
+        /// Copies a file or directory from the local system (where the Vix client is running) to the guest operating system.
+        /// </summary>
+        public Task CopyFileFromHostToGuestAsync(string hostPathName, string guestPathName)
+        {
+            return CopyFileFromHostToGuestAsync(hostPathName, guestPathName, VMWareInterop.Timeouts.CopyFileTimeout);
+        }
+
+        /// <summary>
+        /// Copies a file or directory from the local system (where the Vix client is running) to the guest operating system.
+        /// You must call LoginInGuest() before calling this procedure.
+        /// Only absolute paths should be used for files in the guest; the resolution of relative paths is not specified.
+        /// </summary>
+        public Task CopyFileFromHostToGuestAsync(string hostPathName, string guestPathName, int timeoutInSeconds)
+        {
+            return CopyFileFromHostToGuestJob(hostPathName, guestPathName).ToTask(timeoutInSeconds);
+        }
+
+        #endregion
+
 
         /// <summary>
         /// Deletes a file from guest file system.
