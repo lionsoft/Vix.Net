@@ -1,1 +1,1 @@
-﻿http://www.codeproject.com/Articles/31961/Automating-VMWare-Tasks-in-C-with-the-VIX-API
+﻿http://www.codeproject.com/Articles/31961/Automating-VMWare-Tasks-in-C-with-the-VIX-API 
